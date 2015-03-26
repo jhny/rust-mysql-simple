@@ -1,4 +1,5 @@
 #[cfg(feature = "openssl")]
+
 use openssl::{ssl, x509};
 
 use std::borrow::Borrow;
@@ -617,7 +618,7 @@ impl MyConn {
                         Some(path) => {
                             let path = from_value::<String>(&path);
                             let opts = MyOpts{
-                                unix_addr: Some(path::PathBuf::new(path.as_slice())),
+                                unix_addr: Some(path::PathBuf::from(path.as_slice())),
                                 ..conn.opts.clone()
                             };
                             return MyConn::new(opts).or(Ok(conn));
@@ -1123,7 +1124,7 @@ impl MyConn {
     fn send_local_infile(&mut self, file_name: &[u8]) -> MyResult<Option<OkPacket>> {
         use std::os::unix::ffi::OsStrExt;
         let path = ::std::ffi::OsStr::from_bytes(file_name);
-        let path = path::PathBuf::new(path);
+        let path = path::PathBuf::from(path);
         let mut file = try!(fs::File::open(&path));
         let mut chunk = vec![0u8; self.max_allowed_packet];
         let mut r = file.read(&mut chunk[..]);
