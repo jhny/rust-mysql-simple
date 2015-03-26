@@ -583,7 +583,7 @@ impl MyConn {
                     Some(path) => {
                         let path = from_value::<String>(&path);
                         let opts = MyOpts{
-                            unix_addr: Some(path::PathBuf::new(path.as_slice())),
+                            unix_addr: Some(path::PathBuf::from(path.as_slice())),
                             ..conn.opts.clone()
                         };
                         return MyConn::new(opts).or(Ok(conn));
@@ -1649,7 +1649,7 @@ mod test {
             tcp_addr: Some(ADDR.to_string()),
             tcp_port: PORT,
             init: vec!["SET GLOBAL sql_mode = 'TRADITIONAL'".to_owned()],
-            ssl_opts: Some((::std::path::PathBuf::new("tests/ca-cert.pem"), None)),
+            ssl_opts: Some((::std::path::PathBuf::from("tests/ca-cert.pem"), None)),
             ..Default::default()
         }
     }
